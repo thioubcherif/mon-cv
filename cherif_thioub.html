@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chérif THIOUB — Inspecteur & Chercheur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body { font-family: 'Inter', sans-serif; color: #2C2C2C; background: #fff; overflow-x: hidden; }
+  img { max-width: 100%; display: block; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ===== TOKENS ===== */
+  :root {
+    --navy: #0A2342;
+    --gold: #D4A017;
+    --gold-light: #F0C842;
+    --white: #FFFFFF;
+    --text: #2C2C2C;
+    --gray-light: #F5F7FA;
+    --gray-border: #E0E6ED;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Inter', sans-serif;
+    --mono: 'Space Grotesk', monospace;
+  }
+
+  /* ===== NAVIGATION ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--navy);
+    padding: 0 2rem;
+    height: 72px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.25); }
+
+  .nav-brand { display: flex; align-items: center; gap: 12px; }
+  .nav-logo { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+  .nav-logo img { width: 100%; height: 100%; object-fit: cover; }
+  .nav-name { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--white); letter-spacing: 0.04em; }
+  .nav-name span { color: var(--gold); }
+
+  .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: var(--mono); font-size: 0.78rem; font-weight: 500;
+    color: rgba(255,255,255,0.93); letter-spacing: 0.08em; text-transform: uppercase;
+    padding-bottom: 2px; border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); border-color: var(--gold); }
+
+  .nav-cta {
+    font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
+    color: var(--navy) !important; background: var(--gold);
+    padding: 8px 18px; border-radius: 2px; letter-spacing: 0.06em; text-transform: uppercase;
+    border-bottom: none !important; transition: background 0.2s, transform 0.1s !important;
+  }
+  .nav-cta:hover { background: var(--gold-light) !important; transform: translateY(-1px); }
+
+  .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .nav-toggle span { width: 24px; height: 2px; background: white; transition: transform 0.3s; }
+
+  /* ===== HERO ===== */
+  #hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0e2d50 0%, var(--navy) 55%, #091d38 100%);
+    display: flex; align-items: center; position: relative; overflow: hidden;
+    padding: 100px 0 60px;
+  }
+
+  .hero-dots {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .hero-accent {
+    position: absolute; right: 0; top: 0; width: 45%; height: 100%;
+    background: linear-gradient(135deg, transparent 30%, rgba(212,160,23,0.06) 100%);
+    pointer-events: none;
+  }
+  .hero-line {
+    position: absolute; left: 0; bottom: 0; width: 100%; height: 3px;
+    background: linear-gradient(90deg, var(--gold) 0%, transparent 60%);
+  }
+
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    position: relative; z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 600;
+    color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-eyebrow::before { content: ''; width: 32px; height: 2px; background: var(--gold); }
+
+  .hero-name {
+    font-family: var(--serif); color: var(--white); line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .hero-name .first { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 400; display: block; }
+  .hero-name .last {
+    font-size: clamp(3.5rem, 7vw, 6rem); font-weight: 700;
+    display: block; letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--white) 0%, var(--gold) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-titles { margin: 1.75rem 0; }
+  .hero-title-badge {
+    display: inline-block; font-family: var(--mono); font-size: 0.7rem;
+    font-weight: 500; color: var(--navy); background: var(--gold);
+    padding: 4px 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .hero-title-line {
+    font-family: var(--sans); font-size: clamp(0.85rem, 1.5vw, 1rem);
+    color: rgba(255,255,255,0.93); line-height: 1.7; margin-bottom: 0.25rem;
+  }
+
+  .hero-signature {
+    margin: 2rem 0 2.5rem;
+    padding-left: 1.25rem;
+    border-left: 3px solid var(--gold);
+  }
+  .hero-signature p {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(1.1rem, 2vw, 1.4rem); color: rgba(255,255,255,0.97);
+    line-height: 1.5;
+  }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
+    color: var(--navy); background: var(--gold);
+    padding: 14px 28px; border-radius: 2px; letter-spacing: 0.08em; text-transform: uppercase;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .btn-outline {
+    font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
+    color: var(--white); border: 1.5px solid rgba(255,255,255,0.65);
+    padding: 14px 28px; border-radius: 2px; letter-spacing: 0.08em; text-transform: uppercase;
+    transition: border-color 0.2s, color 0.2s, transform 0.15s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+  /* Hero right visual */
+  .hero-visual {
+    display: flex; flex-direction: column; align-items: center; gap: 2rem;
+  }
+  .hero-monogram {
+    width: 160px; height: 160px; border-radius: 50%;
+    border: 3px solid var(--gold); padding: 6px;
+    position: relative;
+  }
+  .hero-monogram img { width: 100%; height: 100%; border-radius: 50%; }
+
+  .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; width: 100%; }
+  .hero-stat {
+    background: rgba(255,255,255,0.10); padding: 1.25rem;
+    border: 1px solid rgba(255,255,255,0.20); text-align: center;
+    transition: background 0.2s;
+  }
+  .hero-stat:hover { background: rgba(212,160,23,0.08); }
+  .hero-stat-num { font-family: var(--serif); font-size: 2.2rem; font-weight: 700; color: var(--gold); }
+  .hero-stat-label { font-family: var(--mono); font-size: 0.65rem; color: rgba(255,255,255,0.82); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 4px; }
+
+  /* ===== SECTION COMMONS ===== */
+  .section { padding: 6rem 0; }
+  .section-alt { background: var(--gray-light); }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+  .section-header { margin-bottom: 3.5rem; }
+  .section-eyebrow {
+    font-family: var(--mono); font-size: 0.7rem; font-weight: 600;
+    color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;
+  }
+  .section-eyebrow::before { content: ''; width: 24px; height: 2px; background: var(--gold); }
+  .section-title {
+    font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600; color: var(--navy); line-height: 1.15;
+  }
+  .section-subtitle {
+    font-size: 1.05rem; color: #6B7A8D; line-height: 1.7; margin-top: 0.75rem;
+    max-width: 560px;
+  }
+  .section-divider {
+    width: 60px; height: 3px; background: var(--gold); margin-top: 1rem;
+  }
+
+  /* ===== ABOUT ===== */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+  .about-body { font-size: 1.05rem; line-height: 1.9; color: #444; }
+  .about-body p + p { margin-top: 1.25rem; }
+  .about-body strong { color: var(--navy); font-weight: 600; }
+
+  .about-sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+  .about-card {
+    background: var(--white); border: 1px solid var(--gray-border);
+    border-left: 4px solid var(--gold); padding: 1.5rem; border-radius: 0 4px 4px 0;
+  }
+  .about-card h4 { font-family: var(--serif); font-size: 1.1rem; color: var(--navy); margin-bottom: 0.4rem; }
+  .about-card p { font-size: 0.88rem; color: #666; line-height: 1.6; }
+
+  .contact-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; margin-top: 1.5rem; }
+  .contact-list li { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; color: #555; }
+  .contact-list li .icon { width: 20px; color: var(--gold); flex-shrink: 0; }
+
+  /* ===== EXPERTISE ===== */
+  .expertise-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: var(--gray-border); }
+  .expertise-card {
+    background: var(--white); padding: 2.5rem 2rem;
+    transition: background 0.2s; position: relative; overflow: hidden;
+  }
+  .expertise-card::before {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--gold); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .expertise-card:hover { background: var(--gray-light); }
+  .expertise-card:hover::before { transform: scaleX(1); }
+  .expertise-icon { font-size: 2rem; margin-bottom: 1.25rem; line-height: 1; }
+  .expertise-title { font-family: var(--serif); font-size: 1.3rem; color: var(--navy); margin-bottom: 0.6rem; }
+  .expertise-desc { font-size: 0.88rem; color: #666; line-height: 1.7; }
+
+  /* ===== PARCOURS (TIMELINE) ===== */
+  .parcours-tabs { display: flex; gap: 0; margin-bottom: 3rem; border-bottom: 2px solid var(--gray-border); }
+  .tab-btn {
+    font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
+    color: #888; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.75rem 2rem; cursor: pointer; border: none; background: none;
+    border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color 0.2s, border-color 0.2s;
+  }
+  .tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
+  .tab-btn:hover:not(.active) { color: var(--navy); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: ''; position: absolute; left: 0; top: 8px; bottom: 0;
+    width: 2px; background: linear-gradient(180deg, var(--gold) 0%, var(--gray-border) 100%);
+  }
+  .timeline-item { position: relative; padding-bottom: 3rem; padding-left: 2.5rem; }
+  .timeline-item:last-child { padding-bottom: 0; }
+  .timeline-dot {
+    position: absolute; left: -2.5rem; top: 6px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--white); border: 2px solid var(--gold);
+    transition: background 0.2s;
+  }
+  .timeline-item:hover .timeline-dot { background: var(--gold); }
+  .timeline-date { font-family: var(--mono); font-size: 0.7rem; font-weight: 600; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .timeline-org { font-family: var(--mono); font-size: 0.75rem; color: #999; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+  .timeline-title { font-family: var(--serif); font-size: 1.25rem; color: var(--navy); margin-bottom: 0.5rem; }
+  .timeline-sub { font-size: 0.82rem; color: var(--gold); font-style: italic; margin-bottom: 0.75rem; }
+  .timeline-desc { font-size: 0.9rem; color: #555; line-height: 1.7; }
+  .timeline-desc ul { margin-top: 0.5rem; padding-left: 1rem; display: flex; flex-direction: column; gap: 0.3rem; }
+  .timeline-desc li { font-size: 0.88rem; color: #666; }
+  .timeline-badge {
+    display: inline-block; font-family: var(--mono); font-size: 0.65rem; font-weight: 600;
+    color: var(--white); background: var(--navy); padding: 3px 8px; margin-top: 0.6rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .timeline-badge.current { background: var(--gold); color: var(--navy); }
+
+  /* ===== COMPÉTENCES ===== */
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+  .skills-group-title { font-family: var(--serif); font-size: 1.4rem; color: var(--navy); margin-bottom: 1.75rem; }
+  .skill-item { margin-bottom: 1.25rem; }
+  .skill-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+  .skill-name { font-family: var(--mono); font-size: 0.8rem; color: #444; font-weight: 500; }
+  .skill-pct { font-family: var(--mono); font-size: 0.75rem; color: var(--gold); font-weight: 600; }
+  .skill-bar { height: 4px; background: var(--gray-border); border-radius: 2px; overflow: hidden; }
+  .skill-fill { height: 100%; background: linear-gradient(90deg, var(--navy) 0%, var(--gold) 100%); border-radius: 2px; width: 0; transition: width 1s ease 0.2s; }
+
+  .lang-grid { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+  .lang-item { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1rem; border: 1px solid var(--gray-border); }
+  .lang-name { font-family: var(--mono); font-size: 0.8rem; color: var(--navy); font-weight: 600; }
+  .lang-level { font-size: 0.75rem; color: #888; }
+  .lang-dots { display: flex; gap: 4px; }
+  .lang-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gray-border); }
+  .lang-dot.filled { background: var(--gold); }
+
+  .savoir-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .savoir-tag {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    color: var(--navy); background: var(--gray-light); border: 1px solid var(--gray-border);
+    padding: 5px 12px; letter-spacing: 0.05em; transition: background 0.2s, border-color 0.2s;
+  }
+  .savoir-tag:hover { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+  /* ===== RECHERCHE ===== */
+  .research-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .research-card {
+    background: var(--white); border: 1px solid var(--gray-border);
+    padding: 2rem; position: relative; overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .research-card:hover { border-color: var(--gold); box-shadow: 0 8px 32px rgba(10,35,66,0.08); }
+  .research-card::after {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 4px; height: 100%; background: var(--gold);
+    transform: scaleY(0); transform-origin: top; transition: transform 0.3s;
+  }
+  .research-card:hover::after { transform: scaleY(1); }
+  .research-type { font-family: var(--mono); font-size: 0.65rem; font-weight: 600; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .research-title { font-family: var(--serif); font-size: 1.15rem; color: var(--navy); line-height: 1.4; margin-bottom: 0.6rem; }
+  .research-context { font-size: 0.85rem; color: #888; line-height: 1.6; margin-bottom: 0.75rem; }
+  .research-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .research-tag { font-family: var(--mono); font-size: 0.65rem; color: #777; border: 1px solid var(--gray-border); padding: 3px 8px; }
+
+  /* Podcast card */
+  .podcast-card {
+    grid-column: 1 / -1;
+    background: #112f55; padding: 2.5rem;
+    display: flex; align-items: center; gap: 2.5rem;
+  }
+  .podcast-icon { font-size: 2.5rem; flex-shrink: 0; }
+  .podcast-badge { font-family: var(--mono); font-size: 0.65rem; font-weight: 600; color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .podcast-title { font-family: var(--serif); font-size: 1.5rem; color: var(--white); margin-bottom: 0.4rem; }
+  .podcast-desc { font-size: 0.9rem; color: rgba(255,255,255,0.90); line-height: 1.6; }
+
+  /* ===== CONTACT ===== */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+  .contact-info-block { display: flex; flex-direction: column; gap: 1.5rem; }
+  .contact-info-item {
+    display: flex; gap: 1rem; padding: 1.25rem; border: 1px solid var(--gray-border);
+    transition: border-color 0.2s;
+  }
+  .contact-info-item:hover { border-color: var(--gold); }
+  .contact-info-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 2px; }
+  .contact-info-label { font-family: var(--mono); font-size: 0.65rem; font-weight: 600; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.25rem; }
+  .contact-info-value { font-size: 0.92rem; color: var(--text); }
+
+  .contact-form-block { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-field label { font-family: var(--mono); font-size: 0.68rem; font-weight: 600; color: #888; letter-spacing: 0.1em; text-transform: uppercase; }
+  .form-field input, .form-field textarea {
+    font-family: var(--sans); font-size: 0.9rem; color: var(--text);
+    border: 1px solid var(--gray-border); padding: 0.75rem 1rem;
+    outline: none; transition: border-color 0.2s; background: var(--gray-light);
+  }
+  .form-field textarea { resize: vertical; min-height: 100px; }
+  .form-field input:focus, .form-field textarea:focus { border-color: var(--gold); background: var(--white); }
+  .btn-send {
+    align-self: flex-start; font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
+    color: var(--white); background: var(--navy); border: none; cursor: pointer;
+    padding: 14px 32px; letter-spacing: 0.1em; text-transform: uppercase;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-send:hover { background: var(--gold); color: var(--navy); transform: translateY(-2px); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--navy); padding: 3rem 0;
+    border-top: 3px solid var(--gold);
+  }
+  .footer-inner {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+  }
+  .footer-brand { font-family: var(--serif); font-size: 1.25rem; color: var(--white); }
+  .footer-brand span { color: var(--gold); }
+  .footer-tagline { font-family: var(--mono); font-size: 0.7rem; color: rgba(255,255,255,0.78); letter-spacing: 0.1em; margin-top: 4px; }
+  .footer-links { display: flex; gap: 2rem; list-style: none; }
+  .footer-links a { font-family: var(--mono); font-size: 0.68rem; color: rgba(255,255,255,0.80); letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy { font-family: var(--mono); font-size: 0.65rem; color: rgba(255,255,255,0.65); }
+
+  /* ===== SCROLL REVEAL ===== */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .about-grid { grid-template-columns: 1fr; }
+    .expertise-grid { grid-template-columns: 1fr 1fr; }
+    .skills-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .research-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0; background: var(--navy); padding: 1.5rem 2rem; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.2); }
+    .nav-links.open { display: flex; }
+    .nav-toggle { display: flex; }
+    .podcast-card { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 600px) {
+    .expertise-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    .footer-inner { flex-direction: column; align-items: flex-start; }
+    .footer-links { flex-wrap: wrap; gap: 1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { transition: none; }
+    .skill-fill { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a class="nav-brand" href="#hero">
+    <div class="nav-logo"></div>
+    <span class="nav-name">Chérif <span>THIOUB</span></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#expertise">Expertise</a></li>
+    <li><a href="#parcours">Parcours</a></li>
+    <li><a href="#competences">Compétences</a></li>
+    <li><a href="#recherche">Recherche</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+  <div class="nav-toggle" id="navToggle" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-accent"></div>
+  <div class="hero-line"></div>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Inspecteur · IPSJ · Cour d'appel de Saint-Louis</div>
+      <h1 class="hero-name">
+        <span class="first">Chérif</span>
+        <span class="last">THIOUB</span>
+      </h1>
+      <div class="hero-titles">
+        <span class="hero-title-badge">Inspecteur · IPSJ Saint-Louis</span>
+        <p class="hero-title-line">Inspecteur de la Protection Judiciaire et Sociale — IPSJ Ressort Cour d'appel de Saint-Louis</p>
+        <p class="hero-title-line">Sociologue du Développement · Chercheur indépendant</p>
+      </div>
+      <div class="hero-signature">
+        <p>« Comprendre les réalités sociales pour éclairer l'action publique »</p>
+      </div>
+      <div class="hero-actions">
+        <a href="CV_Cherif_Thioub.pdf" class="btn-primary" download>⬇ Télécharger le CV</a>
+        <a href="#contact" class="btn-outline">Me contacter</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-monogram">
+        _BIG
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">5+</div>
+          <div class="hero-stat-label">Ans d'expérience</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">M2</div>
+          <div class="hero-stat-label">Sociologie</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">3</div>
+          <div class="hero-stat-label">Langues</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">DGPJS</div>
+          <div class="hero-stat-label">Institution</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Profil</div>
+      <h2 class="section-title">À propos</h2>
+      <div class="section-divider"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-body reveal reveal-delay-1">
+        <p>
+          Chercheur-praticien à la croisée de la <strong>sociologie du développement</strong> et de 
+          l'administration publique, Chérif THIOUB est Inspecteur de l'Éducation Surveillée et de la 
+          Protection Sociale au sein de la <strong>Direction Générale de la Protection Judiciaire et Sociale 
+          (DGPJS)</strong>, rattaché au Ministère de la Justice du Sénégal, affecté à l'Inspection de la Protection Judiciaire et Sociale (IPSJ) du ressort de la Cour d'appel de Saint-Louis.
+        </p>
+        <p>
+          Fort d'une formation académique rigoureuse à l'<strong>Université Gaston Berger de Saint-Louis</strong> — 
+          où il a conduit des recherches approfondies sur la gouvernance foncière, les dynamiques 
+          périurbaines et les politiques sociales — il développe une approche analytique ancrée dans 
+          l'observation de terrain et la rigueur méthodologique.
+        </p>
+        <p>
+          Ses travaux s'intéressent particulièrement à la <strong>protection de l'enfance</strong>, à la 
+          <strong>justice juvénile</strong> et aux <strong>politiques sociales</strong> en contexte ouest-africain. 
+          Chercheur indépendant (free-lance), il contribue à la production de connaissances au service de l'action publique et des organisations de développement.
+        </p>
+        <p>
+          Animé par la conviction que la rigueur intellectuelle doit nourrir l'efficacité administrative, 
+          il vise à <strong>construire des ponts entre la recherche et la pratique institutionnelle</strong>, 
+          au bénéfice des populations vulnérables et des territoires.
+        </p>
+        <ul class="contact-list">
+          <li><span class="icon">📍</span> Tivaouane Peulh, Dakar — Sénégal</li>
+          <li><span class="icon">📧</span> thioub.cherif@gmail.com</li>
+          <li><span class="icon">📱</span> +221 78 149 94 13</li>
+          <li><span class="icon">🏛️</span> Guédiawaye (Poste actuel)</li>
+        </ul>
+      </div>
+      <div class="about-sidebar reveal reveal-delay-2">
+        <div class="about-card">
+          <h4>Administration publique</h4>
+          <p>Inspecteur de la Protection Judiciaire et Sociale (IPJS), affecté à l'Inspection de la Protection Judiciaire et Sociale du ressort de la Cour d'appel de Saint-Louis.</p>
+        </div>
+        <div class="about-card">
+          <h4>Recherche académique</h4>
+          <p>Chercheur indépendant (free-lance). Spécialisé en socioanthropologie du développement et en politiques sociales.</p>
+        </div>
+        <div class="about-card">
+          <h4>Engagement communautaire</h4>
+          <p>Coordonnateur de la Cellule des Anciens de Dakar — communauté Tijaniyya. Ancien Secrétaire général du Dahira Tidiane de l'UGB (2022–2024).</p>
+        </div>
+        <div class="about-card">
+          <h4>Média &amp; Sensibilisation</h4>
+          <p>Fondateur du podcast <em>Njaboot Protégé</em>, dédié à la protection de l'enfance dans le département de Guédiawaye.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERTISE -->
+<section id="expertise" class="section section-alt">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Domaines d'intervention</div>
+      <h2 class="section-title">Expertise</h2>
+      <p class="section-subtitle">Une approche intégrée à la croisée du droit, de la sociologie et de l'action publique.</p>
+      <div class="section-divider"></div>
+    </div>
+    <div class="expertise-grid reveal reveal-delay-1">
+      <div class="expertise-card">
+        <div class="expertise-icon">🛡️</div>
+        <h3 class="expertise-title">Protection de l'Enfance</h3>
+        <p class="expertise-desc">Inspection, suivi et évaluation des dispositifs de protection judiciaire et sociale des mineurs. Connaissance des mécanismes institutionnels de prise en charge.</p>
+      </div>
+      <div class="expertise-card">
+        <div class="expertise-icon">⚖️</div>
+        <h3 class="expertise-title">Justice Juvénile</h3>
+        <p class="expertise-desc">Analyse des politiques de justice pour mineurs, des cadres légaux et des pratiques institutionnelles en matière d'éducation surveillée.</p>
+      </div>
+      <div class="expertise-card">
+        <div class="expertise-icon">🏛️</div>
+        <h3 class="expertise-title">Politiques Sociales</h3>
+        <p class="expertise-desc">Diagnostic et évaluation des politiques publiques sociales. Approche analytique des dynamiques d'exclusion, de vulnérabilité et de cohésion sociale.</p>
+      </div>
+      <div class="expertise-card">
+        <div class="expertise-icon">🗺️</div>
+        <h3 class="expertise-title">Gouvernance Territoriale</h3>
+        <p class="expertise-desc">Analyse des dynamiques foncières, des conflits d'usage et des mécanismes de gouvernance locale dans les zones périurbaines et rurales.</p>
+      </div>
+      <div class="expertise-card">
+        <div class="expertise-icon">🔬</div>
+        <h3 class="expertise-title">Recherche Qualitative</h3>
+        <p class="expertise-desc">Conduite d'enquêtes qualitatives et quantitatives de terrain. Entretiens approfondis, focus groups, analyse thématique et production de rapports scientifiques.</p>
+      </div>
+      <div class="expertise-card">
+        <div class="expertise-icon">📊</div>
+        <h3 class="expertise-title">Inspection &amp; Contrôle</h3>
+        <p class="expertise-desc">Planification et conduite de missions d'inspection administratives et institutionnelles. Rédaction de rapports d'inspection et recommandations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARCOURS -->
+<section id="parcours" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Trajectoire</div>
+      <h2 class="section-title">Parcours</h2>
+      <div class="section-divider"></div>
+    </div>
+    <div class="parcours-tabs reveal">
+      <button class="tab-btn active" onclick="switchTab('exp')">Expérience Professionnelle</button>
+      <button class="tab-btn" onclick="switchTab('edu')">Formation Académique</button>
+    </div>
+
+    <!-- Expérience -->
+    <div id="tab-exp" class="tab-content active">
+      <div class="timeline">
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2026 – Présent</div>
+          <div class="timeline-org">DGPJS — Ministère de la Justice</div>
+          <h3 class="timeline-title">Inspecteur de la Protection Judiciaire et Sociale</h3>
+          <p class="timeline-sub">Inspection de la Protection Judiciaire et Sociale — Ressort de la Cour d'appel de Saint-Louis</p>
+          <p class="timeline-desc">Missions d'inspection, de contrôle et d'évaluation des structures de protection judiciaire et sociale dans le ressort de la Cour d'appel de Saint-Louis. Contribution à la production de rapports institutionnels et au suivi des politiques de protection de l'enfance.</p>
+          <span class="timeline-badge current">Poste actuel</span>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-1">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Août – Septembre 2024</div>
+          <div class="timeline-org">IGAJ — Inspection Générale de l'Administration de la Justice</div>
+          <h3 class="timeline-title">Stage institutionnel d'inspection</h3>
+          <p class="timeline-sub">Analyse de l'organisation et du fonctionnement de l'IGAJ</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Étude de rapports portant sur différents types d'inspection administrative</li>
+              <li>Entretiens avec les inspecteurs sur les missions et méthodes de l'IGAJ</li>
+              <li>Analyse des procédures d'inspection et de contrôle de l'administration judiciaire</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-2">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">15 mai – 14 juin 2023</div>
+          <div class="timeline-org">ANSD — Agence Nationale de la Statistique et de la Démographie</div>
+          <h3 class="timeline-title">Agent recenseur</h3>
+          <p class="timeline-sub">5e Recensement Général de la Population et de l'Habitat (RGPH5)</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Collecte de données démographiques sur tablette numérique</li>
+              <li>Application rigoureuse des protocoles de collecte statistique nationale</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-3">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Décembre 2022</div>
+          <div class="timeline-org">IPAR &amp; Dooleel Mbay</div>
+          <h3 class="timeline-title">Assistant Chercheur — Chef d'équipe</h3>
+          <p class="timeline-sub">Étude qualitative de situation de référence du projet Dooleel Mbay</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Conduite d'enquêtes qualitatives dans les régions de Sédhiou, Kolda et Ziguinchor</li>
+              <li>Management d'une équipe de collecte de données terrain</li>
+              <li>Rédaction des comptes rendus d'entretiens</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-4">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Octobre 2022</div>
+          <div class="timeline-org">IPAR · Pôle Foncier de Montpellier · UGB</div>
+          <h3 class="timeline-title">Élève Chercheur</h3>
+          <p class="timeline-sub">École Chercheur sur les transactions et marchés fonciers ruraux en Afrique</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Enquêtes qualitatives dans la Commune de Ndiébène Gandiol</li>
+              <li>Travail en équipe pluridisciplinaire et internationale</li>
+              <li>Comptes rendus d'entretiens et notes de synthèse</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Juin 2021</div>
+          <div class="timeline-org">Université Gaston Berger de Saint-Louis</div>
+          <h3 class="timeline-title">Assistant Chercheur</h3>
+          <p class="timeline-sub">Étude exploratoire sur les arrangements fonciers en milieu rural</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Identification et capitalisation d'expériences d'arrangements fonciers dans le département de Podor</li>
+              <li>Collecte de données qualitatives et transcription d'entretiens</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formation -->
+    <div id="tab-edu" class="tab-content">
+      <div class="timeline">
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2024 – 2026</div>
+          <div class="timeline-org">Centre de Formation Judiciaire (CFJ)</div>
+          <h3 class="timeline-title">Diplôme d'Inspecteur de la Protection Judiciaire et Sociale</h3>
+          <p class="timeline-sub">Formation professionnelle initiale — Administration judiciaire et sociale</p>
+          <span class="timeline-badge" style="background:#2C8C5A;color:#fff;">Diplômé</span>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-1">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2023 – 2024</div>
+          <div class="timeline-org">Université Gaston Berger — Saint-Louis</div>
+          <h3 class="timeline-title">Doctorat — 1re année</h3>
+          <p class="timeline-sub">Socioanthropologie du développement</p>
+          
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-2">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2021 – 2022</div>
+          <div class="timeline-org">Université Gaston Berger — Saint-Louis</div>
+          <h3 class="timeline-title">Master 2 en Sociologie du Développement</h3>
+          <p class="timeline-sub">Mémoire de master</p>
+          <p class="timeline-desc">
+            <em>« Analyse des pratiques des courtiers en foncier dans un contexte de marchandisation de la terre en milieu périurbain dans la Commune de Tivaouane Peulh-Niague »</em>
+          </p>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-3">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2020 – 2021</div>
+          <div class="timeline-org">Université Gaston Berger — Saint-Louis</div>
+          <h3 class="timeline-title">Master 1 en Sociologie du Développement</h3>
+          <p class="timeline-sub">Mini-mémoire</p>
+          <p class="timeline-desc">
+            <em>« Analyse des facteurs d'insécurité et des mécanismes de sécurisation foncière dans la zone périurbaine de Tivaouane Peulh-Niague »</em>
+          </p>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-4">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2019 – 2020</div>
+          <div class="timeline-org">Université Gaston Berger — Saint-Louis</div>
+          <h3 class="timeline-title">Licence en Sociologie</h3>
+          <p class="timeline-sub">Étude de cas</p>
+          <p class="timeline-desc">
+            <em>« Les facteurs explicatifs des conflits fonciers en milieu urbain périphérique : le cas des victimes de démolition de la Commune de Tivaouane Peulh-Niague »</em>
+          </p>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Lycée de Tivaouane Peulh</div>
+          <div class="timeline-org">Enseignement secondaire</div>
+          <h3 class="timeline-title">Baccalauréat Série L2</h3>
+          <p class="timeline-sub">Sciences humaines et sociales</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPÉTENCES -->
+<section id="competences" class="section section-alt">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Aptitudes</div>
+      <h2 class="section-title">Compétences</h2>
+      <div class="section-divider"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="reveal reveal-delay-1">
+        <h3 class="skills-group-title">Outils numériques</h3>
+        <div class="skill-item">
+          <div class="skill-label"><span class="skill-name">Word / PowerPoint</span><span class="skill-pct">90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-label"><span class="skill-name">KoboCollect / ODK</span><span class="skill-pct">90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-label"><span class="skill-name">Canva</span><span class="skill-pct">90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-label"><span class="skill-name">VUE Mapmind</span><span class="skill-pct">90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-label"><span class="skill-name">Trello / Asana</span><span class="skill-pct">80%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="80"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-label"><span class="skill-name">Sphinx</span><span class="skill-pct">70%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="70"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-label"><span class="skill-name">Excel / SPSS</span><span class="skill-pct">60%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="60"></div></div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-2">
+        <h3 class="skills-group-title">Langues</h3>
+        <div class="lang-grid">
+          <div class="lang-item">
+            <div>
+              <div class="lang-name">Français</div>
+              <div class="lang-level">Très avancé — Langue professionnelle</div>
+            </div>
+            <div class="lang-dots">
+              <div class="lang-dot filled"></div><div class="lang-dot filled"></div>
+              <div class="lang-dot filled"></div><div class="lang-dot filled"></div><div class="lang-dot filled"></div>
+            </div>
+          </div>
+          <div class="lang-item">
+            <div>
+              <div class="lang-name">Anglais</div>
+              <div class="lang-level">Intermédiaire avancé</div>
+            </div>
+            <div class="lang-dots">
+              <div class="lang-dot filled"></div><div class="lang-dot filled"></div>
+              <div class="lang-dot filled"></div><div class="lang-dot filled"></div><div class="lang-dot"></div>
+            </div>
+          </div>
+          <div class="lang-item">
+            <div>
+              <div class="lang-name">Wolof</div>
+              <div class="lang-level">Langue maternelle</div>
+            </div>
+            <div class="lang-dots">
+              <div class="lang-dot filled"></div><div class="lang-dot filled"></div>
+              <div class="lang-dot filled"></div><div class="lang-dot filled"></div><div class="lang-dot filled"></div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="skills-group-title" style="margin-top:2.5rem;">Savoir-faire transversaux</h3>
+        <div class="savoir-list">
+          <span class="savoir-tag">Diagnostic institutionnel</span>
+          <span class="savoir-tag">Études qualitatives</span>
+          <span class="savoir-tag">Études quantitatives</span>
+          <span class="savoir-tag">Capitalisation</span>
+          <span class="savoir-tag">Suivi-évaluation</span>
+          <span class="savoir-tag">Gestion de projets</span>
+          <span class="savoir-tag">Animation &amp; facilitation</span>
+          <span class="savoir-tag">Gestion du changement</span>
+          <span class="savoir-tag">Recherche scientifique</span>
+          <span class="savoir-tag">Rédaction institutionnelle</span>
+          <span class="savoir-tag">Travail en équipe</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECHERCHE -->
+<section id="recherche" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Travaux &amp; Projets</div>
+      <h2 class="section-title">Recherche &amp; Publications</h2>
+      <p class="section-subtitle">Travaux académiques, études de terrain et projets de médiation sociale.</p>
+      <div class="section-divider"></div>
+    </div>
+    <div class="research-grid">
+      <div class="research-card reveal">
+        <div class="research-type">Mémoire de Master 2 · 2022</div>
+        <h3 class="research-title">Pratiques des courtiers en foncier dans un contexte de marchandisation de la terre</h3>
+        <p class="research-context">Commune de Tivaouane Peulh-Niague, Dakar — Université Gaston Berger de Saint-Louis</p>
+        <div class="research-tags">
+          <span class="research-tag">Foncier urbain</span>
+          <span class="research-tag">Sociologie</span>
+          <span class="research-tag">Courtage</span>
+          <span class="research-tag">Périurbanisation</span>
+        </div>
+      </div>
+
+      <div class="research-card reveal reveal-delay-1">
+        <div class="research-type">Mini-mémoire · Master 1 · 2021</div>
+        <h3 class="research-title">Insécurité et mécanismes de sécurisation foncière en zone périurbaine</h3>
+        <p class="research-context">Zone de Tivaouane Peulh-Niague — Université Gaston Berger de Saint-Louis</p>
+        <div class="research-tags">
+          <span class="research-tag">Sécurité foncière</span>
+          <span class="research-tag">Périurbain</span>
+          <span class="research-tag">Vulnérabilité</span>
+        </div>
+      </div>
+
+      <div class="research-card reveal reveal-delay-2">
+        <div class="research-type">Étude de cas · Licence · 2020</div>
+        <h3 class="research-title">Conflits fonciers en milieu urbain périphérique : cas des victimes de démolition</h3>
+        <p class="research-context">Commune de Tivaouane Peulh-Niague — UGB, Saint-Louis</p>
+        <div class="research-tags">
+          <span class="research-tag">Conflit foncier</span>
+          <span class="research-tag">Démolition</span>
+          <span class="research-tag">Droits</span>
+        </div>
+      </div>
+
+      <div class="research-card reveal reveal-delay-3">
+        <div class="research-type">Étude terrain · 2022</div>
+        <h3 class="research-title">Situation de référence du projet Dooleel Mbay</h3>
+        <p class="research-context">IPAR &amp; Dooleel Mbay — Régions de Sédhiou, Kolda, Ziguinchor</p>
+        <div class="research-tags">
+          <span class="research-tag">Développement rural</span>
+          <span class="research-tag">Enquête terrain</span>
+          <span class="research-tag">Casamance</span>
+        </div>
+      </div>
+
+      <div class="podcast-card reveal">
+        <div class="podcast-icon">🎙️</div>
+        <div>
+          <div class="podcast-badge">Podcast · En production</div>
+          <h3 class="podcast-title">Njaboot Protégé</h3>
+          <p class="podcast-desc">
+            Podcast dédié à la <strong style="color:var(--gold)">protection de l'enfance dans le département de Guédiawaye</strong>. 
+            Chaque épisode éclaire les enjeux de vulnérabilité juvénile, les dispositifs institutionnels 
+            et les dynamiques sociales à travers des entretiens, témoignages et analyses de terrain.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section section-alt">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Collaboration &amp; Réseau</div>
+      <h2 class="section-title">Me contacter</h2>
+      <p class="section-subtitle">Institutions publiques, partenaires, chercheurs, étudiants, ONG : toutes les sollicitations sont les bienvenues.</p>
+      <div class="section-divider"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info-block reveal reveal-delay-1">
+        <div class="contact-info-item">
+          <div class="contact-info-icon">📧</div>
+          <div>
+            <div class="contact-info-label">Email</div>
+            <div class="contact-info-value">thioub.cherif@gmail.com</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">📱</div>
+          <div>
+            <div class="contact-info-label">Téléphone</div>
+            <div class="contact-info-value">+221 78 149 94 13</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">📍</div>
+          <div>
+            <div class="contact-info-label">Localisation</div>
+            <div class="contact-info-value">Tivaouane Peulh, Dakar — Sénégal<br><small style="color:#999">Poste : Guédiawaye</small></div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">🏛️</div>
+          <div>
+            <div class="contact-info-label">Institution</div>
+            <div class="contact-info-value">DGPJS — Ministère de la Justice<br><small style="color:#999">IPSJ · Ressort Cour d'appel de Saint-Louis</small></div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">💼</div>
+          <div>
+            <div class="contact-info-label">LinkedIn</div>
+            <div class="contact-info-value">Cherif THIOUB</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-block reveal reveal-delay-2">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Prénom &amp; Nom</label>
+            <input type="text" placeholder="Votre nom">
+          </div>
+          <div class="form-field">
+            <label>Organisation</label>
+            <input type="text" placeholder="Votre organisation">
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" placeholder="votre@email.com">
+        </div>
+        <div class="form-field">
+          <label>Objet</label>
+          <input type="text" placeholder="Collaboration, consultation, recherche…">
+        </div>
+        <div class="form-field">
+          <label>Message</label>
+          <textarea placeholder="Votre message…"></textarea>
+        </div>
+        <button class="btn-send" onclick="handleForm()">Envoyer le message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">Chérif <span>THIOUB</span></div>
+        <div class="footer-tagline">Inspecteur · Sociologue · Chercheur · Sénégal</div>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#about">À propos</a></li>
+        <li><a href="#expertise">Expertise</a></li>
+        <li><a href="#parcours">Parcours</a></li>
+        <li><a href="#recherche">Recherche</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="footer-copy">© 2026 Chérif THIOUB · Tous droits réservés</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── LOGO INJECTION (safe from multi-line issues) ──
+  const LOGO_SRC = "data:image/png;base64,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";
+
+  // Replace logo placeholders
+  document.querySelectorAll('.nav-logo, .hero-monogram').forEach(el => {
+    if (el.classList.contains('nav-logo')) {
+      el.innerHTML = `<img src="${LOGO_SRC}" alt="CT Logo">`;
+    } else {
+      el.innerHTML = `<img src="${LOGO_SRC}" alt="Chérif THIOUB">`;
+    }
+  });
+
+  // ── NAV SCROLL ──
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── MOBILE MENU ──
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+  });
+
+  // ── TAB SWITCH ──
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    event.currentTarget.classList.add('active');
+    // Trigger reveals for the newly shown tab
+    setTimeout(triggerReveal, 50);
+  }
+
+  // ── SCROLL REVEAL ──
+  function triggerReveal() {
+    const reveals = document.querySelectorAll('.reveal:not(.visible)');
+    reveals.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight - 60) {
+        el.classList.add('visible');
+      }
+    });
+  }
+
+  // ── SKILL BARS ──
+  let barsAnimated = false;
+  function animateBars() {
+    if (barsAnimated) return;
+    const section = document.getElementById('competences');
+    if (!section) return;
+    const rect = section.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      barsAnimated = true;
+      document.querySelectorAll('.skill-fill').forEach(bar => {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+    }
+  }
+
+  window.addEventListener('scroll', () => { triggerReveal(); animateBars(); });
+  window.addEventListener('load', () => { triggerReveal(); animateBars(); });
+
+  // ── FORM ──
+  function handleForm() {
+    const btn = document.querySelector('.btn-send');
+    btn.textContent = '✓ Message envoyé';
+    btn.style.background = '#2C8C5A';
+    btn.style.color = '#fff';
+    setTimeout(() => { btn.textContent = 'Envoyer le message →'; btn.style.background = ''; btn.style.color = ''; }, 3000);
+  }
+</script>
+</body>
+</html>
